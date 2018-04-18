@@ -1,0 +1,21 @@
+{:objects
+ {:post
+  {:fields {:id    {:type String}
+            :title {:type String}
+            :text  {:type String}}}}
+
+ :queries
+ {:post   {:type    :post
+           :args    {:id {:type String}}
+           :resolve :get-post}
+  :search {:type    (list :post)
+           :args    {:q {:type String}}
+           :resolve :search}}
+
+ :mutations
+ {:addPost {:type    :post
+            :args    {:title {:type (non-null String)}
+                      :text  {:type String}}
+            :resolve :add-post}
+  :reset   {:type Boolean
+            :resolve :reset}}}
