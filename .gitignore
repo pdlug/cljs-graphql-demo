@@ -1,4 +1,6 @@
 .envrc
+.rebel_readline_history
+/.cpcache
 /.idea
 /*.iml
 /*.log
