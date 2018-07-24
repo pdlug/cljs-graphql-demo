@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-docker tag "${IMAGE_NAME}:latest" "${REPO_URL}:latest"
-docker push "${REPO_URL}:latest"

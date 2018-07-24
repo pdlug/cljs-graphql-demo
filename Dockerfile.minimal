@@ -1,0 +1,31 @@
+FROM alpine:3.8 as packager
+
+ENV JAVA_HOME=/opt/jdk \
+    PATH="$PATH:/opt/jdk/bin" \
+    LANG=C.UTF-8
+
+RUN set -ex && \
+    apk add --no-cache bash curl && \
+    mkdir -p /opt/jdk && \
+    (curl https://download.java.net/java/early_access/alpine/19/binaries/openjdk-11-ea+19_linux-x64-musl_bin.tar.gz | tar zxf - -C /opt/jdk --strip-components=1) && \
+    rm /opt/jdk/lib/src.zip
+
+RUN jlink \
+    --module-path /opt/jdk/jmods \
+    --verbose \
+    --add-modules java.base,java.instrument,java.management \
+    --compress=2 \
+    --strip-debug \
+    --no-header-files \
+    --no-man-pages \
+    --output /opt/jdk-minimal
+
+FROM alpine:3.8
+COPY --from=packager /opt/jdk-minimal /opt/jdk-minimal
+ADD target/graphql-demo.jar /
+
+ENV JAVA_HOME=/opt/jdk-minimal
+ENV PATH="$PATH:$JAVA_HOME/bin"
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/graphql-demo.jar"]

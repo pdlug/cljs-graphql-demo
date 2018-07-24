@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-lein do clean, uberjar
-docker build -t "${IMAGE_NAME}:latest" .
